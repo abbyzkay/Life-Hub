@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>My Life Hub</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LifeHub">
+<meta name="theme-color" content="#4F46E5">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+:root{
+  --accent:#4F46E5;--accent-bg:#EEF2FF;
+  --green:#059669;--green-bg:#D1FAE5;
+  --rose:#BE185D;--rose-bg:#FCE7F3;
+  --violet:#7C3AED;--violet-bg:#EDE9FE;
+  --amber:#D97706;--amber-bg:#FEF3C7;
+  --teal:#0F766E;--teal-bg:#CCFBF1;
+  --gold:#F5C842;
+  --text:#0F172A;--text2:#475569;--text3:#94A3B8;
+  --border:#E2E8F0;--surface:#fff;--surface2:#F8FAFC;--surface3:#F1F5F9;
+  --radius:16px;--nav-h:68px
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:#ECEEFF;max-width:430px;margin:0 auto;padding-bottom:calc(var(--nav-h)+8px);min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.hidden{display:none!important}
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:#fff;border-top:1px solid #E2E8F0;display:flex;height:var(--nav-h);padding:6px 2px 14px;z-index:100;box-shadow:0 -4px 24px rgba(15,12,41,.09)}
+.nt{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;border-radius:10px;padding:3px 1px;transition:all .18s}
+.nt i{font-size:20px;color:#94A3B8;transition:all .18s}
+.nt span{font-size:9px;color:#94A3B8;font-weight:700;transition:all .18s}
+.nt.on{background:var(--nb,#EEF2FF)}
+.nt.on i,.nt.on span{color:var(--nc,#4F46E5)}
+.hero{background:linear-gradient(135deg,#0F0C29 0%,#312E9E 55%,#4F46E5 100%);padding:24px 18px 20px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(245,200,66,.12);pointer-events:none}
+.hero::after{content:"";position:absolute;bottom:-30px;left:-20px;width:120px;height:120px;border-radius:50%;background:rgba(124,58,237,.18);pointer-events:none}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:1}
+.hero-greet{font-size:12px;color:rgba(255,255,255,.6);font-weight:600;margin-bottom:3px}
+.hero-name{font-size:22px;font-weight:800;color:#fff;letter-spacing:-.3px}
+.hero-date{font-size:11px;color:rgba(255,255,255,.45);margin-top:2px}
+.streak-badge{background:linear-gradient(135deg,#F5C842,#E8A020);color:#78350F;font-size:11px;font-weight:800;padding:6px 11px;border-radius:20px;display:flex;align-items:center;gap:4px;white-space:nowrap;box-shadow:0 4px 12px rgba(245,200,66,.4)}
+.hero-prog{position:relative;z-index:1;margin-top:18px}
+.hero-prog-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
+.hero-prog-lbl{font-size:11px;color:rgba(255,255,255,.55);font-weight:600}
+.hero-prog-pct{font-size:24px;font-weight:800;color:#fff}
+.hero-prog-track{height:8px;background:rgba(255,255,255,.18);border-radius:6px;overflow:hidden}
+.hero-prog-fill{height:100%;background:linear-gradient(90deg,#F5C842,#FBBF24);border-radius:6px;transition:width .5s ease}
+.hero-stats{display:flex;gap:0;margin-top:14px;position:relative;z-index:1}
+.hs-item{flex:1;text-align:center}
+.hs-val{font-size:17px;font-weight:800;color:#fff}
+.hs-lbl{font-size:9px;color:rgba(255,255,255,.5);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-top:1px}
+.hs-div{width:1px;background:rgba(255,255,255,.15);margin:4px 0}
+.sec{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 7px}
+.sec-lbl{font-size:11px;font-weight:800;color:#94A3B8;text-transform:uppercase;letter-spacing:.7px}
+.sec-act{font-size:13px;color:#4F46E5;font-weight:700;cursor:pointer}
+.card{background:#fff;border-radius:var(--radius);margin:0 16px 10px;border:1px solid #E2E8F0;overflow:hidden}
+.card-pad{padding:16px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 16px 10px}
+.tile{border-radius:var(--radius);padding:14px;border:none}
+.tile-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;margin-bottom:9px}
+.tile-val{font-size:22px;font-weight:800;letter-spacing:-.5px;margin-bottom:2px}
+.tile-lbl{font-size:11px;font-weight:700;opacity:.75}
+.tile-sub{font-size:11px;font-weight:700;margin-top:5px;opacity:.85}
+.mood-card{margin:0 16px 10px;border-radius:var(--radius);overflow:hidden;border:1px solid #E2E8F0}
+.mood-top{padding:14px 16px 10px;background:linear-gradient(135deg,#F5F3FF,#EDE9FE)}
+.mood-q{font-size:13px;color:#5B21B6;font-weight:700;margin-bottom:10px}
+.mood-row{display:flex;gap:5px}
+.mood-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 2px;border-radius:12px;border:2px solid #E2E8F0;cursor:pointer;background:#fff;transition:all .2s}
+.mood-btn.on{border-color:#7C3AED;background:linear-gradient(135deg,#F5F3FF,#EDE9FE)}
+.moji{font-size:26px;line-height:1;filter:grayscale(.7);transition:all .2s;display:block}
+.mood-btn.on .moji{filter:grayscale(0);transform:scale(1.15)}
+.mood-btn span:last-child{font-size:10px;color:#94A3B8;font-weight:700}
+.mood-btn.on span:last-child{color:#5B21B6}
+.qrow{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid #F1F5F9;cursor:pointer;transition:background .15s}
+.qrow:last-child{border-bottom:none}
+.qrow:active{background:#F8FAFC}
+.qrow-ic{width:36px;height:36px;min-width:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.qrow-name{font-size:14px;font-weight:700;color:#0F172A;flex:1}
+.qrow-sub{font-size:12px;color:#94A3B8;margin-top:1px;font-weight:500}
+.fp-row{display:flex;gap:7px;padding:0 16px 10px;overflow-x:auto}
+.fp-row::-webkit-scrollbar{display:none}
+.fp{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:700;border:1.5px solid #E2E8F0;background:#fff;color:#64748B;white-space:nowrap;cursor:pointer;transition:all .15s}
+.fp.on{background:linear-gradient(135deg,#059669,#047857);border-color:transparent;color:#fff}
+.task-item{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid #F1F5F9;cursor:pointer;transition:background .15s}
+.task-item:last-child{border-bottom:none}
+.task-item.done{opacity:.38}
+.task-item.done .ti-name{text-decoration:line-through}
+.big-chk{width:36px;height:36px;min-width:36px;border-radius:50%;border:2.5px solid #CBD5E1;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.big-chk.on{background:linear-gradient(135deg,#4F46E5,#7C3AED);border-color:transparent;box-shadow:0 3px 10px rgba(79,70,229,.35)}
+.big-chk i{font-size:16px;color:#fff;opacity:0}
+.big-chk.on i{opacity:1}
+.ti-name{font-size:14px;color:#0F172A;font-weight:700;margin-bottom:4px}
+.ti-chip{font-size:10px;padding:2px 7px;border-radius:7px;font-weight:700;display:inline-flex;align-items:center;gap:3px;margin-right:4px}
+.ti-time{font-size:11px;color:#94A3B8;font-weight:600}
+.add-form{margin:0 16px 10px;background:#fff;border-radius:var(--radius);padding:16px;border:2px solid #059669}
+.fl{margin-bottom:10px}
+.fl label{font-size:11px;font-weight:800;color:#64748B;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px}
+.fi{width:100%;padding:11px 13px;font-size:14px;border:1.5px solid #E2E8F0;border-radius:10px;background:#F8FAFC;color:#0F172A;outline:none;font-weight:600}
+.fi:focus{border-color:#059669;background:#fff}
+.g2f{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.btn-row{display:flex;gap:8px;margin-top:6px}
+.b-cancel{flex:1;padding:11px;border-radius:10px;border:1.5px solid #E2E8F0;background:transparent;color:#64748B;font-size:13px;font-weight:700;cursor:pointer}
+.b-save{flex:2;padding:11px;border-radius:10px;border:none;background:linear-gradient(135deg,#059669,#047857);color:#fff;font-size:13px;font-weight:800;cursor:pointer}
+.dash-task{display:flex;align-items:center;gap:11px;padding:12px 16px;border-bottom:1px solid #F1F5F9;cursor:pointer;transition:background .15s}
+.dash-task:last-child{border-bottom:none}
+.dash-task.done{opacity:.35}
+.dash-task.done .dt-n{text-decoration:line-through}
+.sm-chk{width:28px;height:28px;min-width:28px;border-radius:50%;border:2px solid #CBD5E1;display:flex;align-items:center;justify-content:center;transition:all .18s;flex-shrink:0}
+.sm-chk.on{background:linear-gradient(135deg,#4F46E5,#7C3AED);border-color:transparent}
+.sm-chk i{font-size:13px;color:#fff;opacity:0}
+.sm-chk.on i{opacity:1}
+.dt-n{font-size:13px;color:#0F172A;font-weight:600;flex:1}
+.dt-time{font-size:11px;color:#94A3B8;font-weight:600}
+.grad-card{border-radius:var(--radius);margin:0 16px 10px;padding:16px}
+.gc-title{font-size:14px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.wdots{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+.wd{width:34px;height:34px;border-radius:50%;border:2px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s;background:rgba(255,255,255,.12)}
+.wd.on{background:#fff;border-color:#fff}
+.wd.on i{color:#0F766E}
+.wd i{color:rgba(255,255,255,.65);font-size:14px}
+.w-btns{display:flex;gap:8px}
+.wbtn{flex:1;padding:10px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;text-align:center;background:rgba(255,255,255,.22);color:#fff;border:1.5px solid rgba(255,255,255,.3)}
+.wghost{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15)}
+.sleep-inp-row{display:flex;gap:8px}
+.sleep-inp-row input{flex:1;padding:10px 12px;font-size:14px;border:1.5px solid rgba(255,255,255,.3);border-radius:10px;background:rgba(255,255,255,.15);color:#fff;outline:none;font-weight:600}
+.sleep-inp-row input::placeholder{color:rgba(255,255,255,.45)}
+.slog-btn{padding:10px 16px;background:#fff;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer}
+.schart{display:flex;align-items:flex-end;gap:4px;height:68px;margin-top:10px}
+.sbc{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px}
+.sbv{font-size:9px;color:rgba(255,255,255,.65);min-height:11px;text-align:center;font-weight:700}
+.sbi{width:100%;border-radius:3px 3px 0 0;transition:height .35s}
+.sbd{font-size:9px;color:rgba(255,255,255,.5);font-weight:700}
+.h-card{background:#fff;border-radius:var(--radius);margin:0 16px 10px;border:1px solid #E2E8F0;overflow:hidden}
+.h-sec-title{font-size:13px;font-weight:800;color:#0F172A;padding:13px 16px 10px;border-bottom:1px solid #F1F5F9;display:flex;align-items:center;gap:7px}
+.supp-row{display:flex;align-items:center;gap:11px;padding:12px 16px;border-bottom:1px solid #F1F5F9}
+.supp-row:last-child{border-bottom:none}
+.sq{width:24px;height:24px;min-width:24px;border-radius:6px;border:2px solid #CBD5E1;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+.sq.on{background:linear-gradient(135deg,#059669,#047857);border-color:transparent}
+.sq.on i{color:#fff;font-size:12px}
+.sn{flex:1;font-size:13px;color:#0F172A;font-weight:700}
+.st2{font-size:11px;color:#94A3B8;font-weight:600}
+.wk-row{display:flex;gap:7px;flex-wrap:wrap;padding:12px 16px}
+.wk-pill{padding:8px 12px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;transition:all .18s;border:2px solid #E2E8F0;background:#F8FAFC;color:#475569;display:flex;align-items:center;gap:5px}
+.wk-pill.on{background:linear-gradient(135deg,#5B21B6,#7C3AED);border-color:transparent;color:#fff;box-shadow:0 3px 10px rgba(91,33,182,.28)}
+.tip-row{display:flex;align-items:flex-start;gap:11px;padding:12px 16px;border-bottom:1px solid #F1F5F9}
+.tip-row:last-child{border-bottom:none}
+.tip-ic{width:36px;height:36px;min-width:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.tip-title{font-size:13px;font-weight:800;color:#0F172A;margin-bottom:1px}
+.tip-sub{font-size:12px;color:#64748B;line-height:1.4;font-weight:500}
+.focus-hero{background:linear-gradient(135deg,#4C1D95,#5B21B6,#6D28D9);padding:24px 18px 20px}
+.timer-box{background:#fff;border-radius:var(--radius);margin:0 16px 10px;padding:22px 16px;border:1px solid #E2E8F0;text-align:center}
+.t-phase{font-size:13px;font-weight:800;color:#5B21B6;margin-bottom:16px}
+.t-ring{display:inline-flex;align-items:center;justify-content:center;position:relative;width:160px;height:160px;margin-bottom:4px}
+.t-ring svg{width:160px;height:160px}
+.t-center{position:absolute;text-align:center}
+.t-num{font-size:32px;font-weight:800;color:#0F172A;letter-spacing:-1px}
+.t-sub{font-size:11px;color:#94A3B8;font-weight:700;margin-top:2px}
+.sdots{display:flex;justify-content:center;gap:7px;margin:10px 0 3px}
+.sdot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,#5B21B6,#7C3AED)}
+.sdot.empty{background:transparent;border:2px solid #E2E8F0}
+.sess-lbl{font-size:12px;color:#94A3B8;font-weight:700;margin-bottom:14px}
+.tbtns{display:flex;gap:9px;justify-content:center}
+.t-btn{padding:11px 16px;border-radius:11px;border:1.5px solid #E2E8F0;background:#F8FAFC;color:#0F172A;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px}
+.t-btn.pri{background:linear-gradient(135deg,#5B21B6,#7C3AED);border-color:transparent;color:#fff;padding:11px 28px;box-shadow:0 5px 18px rgba(91,33,182,.38)}
+.dp-row{display:flex;gap:8px;padding:0 16px 12px}
+.dp{flex:1;padding:10px;border-radius:10px;border:1.5px solid #E2E8F0;background:#fff;color:#64748B;font-size:12px;font-weight:700;cursor:pointer;text-align:center}
+.dp.on{background:linear-gradient(135deg,#EDE9FE,#DDD6FE);border-color:#7C3AED;color:#4C1D95}
+.ref-card{background:#fff;border-radius:var(--radius);margin:0 16px 10px;padding:16px;border:1px solid #E2E8F0}
+.ref-q{font-size:14px;font-weight:800;color:#0F172A;margin-bottom:10px;line-height:1.5}
+.ref-area{width:100%;padding:11px 13px;font-size:13px;border:1.5px solid #E2E8F0;border-radius:10px;background:#F8FAFC;color:#0F172A;resize:none;height:78px;font-family:inherit;display:block;margin-bottom:10px;outline:none;line-height:1.5}
+.ref-save{width:100%;padding:12px;background:linear-gradient(135deg,#5B21B6,#7C3AED);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer}
+.period-hero{background:linear-gradient(135deg,#831843,#BE185D,#EC4899);padding:24px 18px 20px;position:relative;overflow:hidden}
+.period-hero::before{content:"";position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.1);pointer-events:none}
+.phase-strip{display:flex;gap:0;margin-top:16px;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.2)}
+.phase-seg{flex:1;padding:9px 2px;text-align:center;font-size:8px;font-weight:800;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.2px}
+.phase-seg.active{background:rgba(255,255,255,.25);color:#fff}
+.period-stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:14px}
+.pstat{text-align:center;padding:4px}
+.pstat-val{font-size:18px;font-weight:800;color:#fff}
+.pstat-lbl{font-size:9px;color:rgba(255,255,255,.55);font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-top:1px}
+.pstat-div{width:1px;background:rgba(255,255,255,.2);margin:6px 0}
+.period-cal-card{background:#fff;border-radius:var(--radius);margin:0 16px 10px;padding:14px 16px;border:1px solid #E2E8F0}
+.pcal{display:flex;flex-wrap:wrap;gap:4px}
+.pcb{width:calc((100% - 24px)/7);aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;cursor:pointer;transition:all .15s}
+.pcb.period{background:linear-gradient(135deg,#BE185D,#EC4899);color:#fff}
+.pcb.today{background:#0F172A;color:#fff}
+.pcb.predicted{background:#FCE7F3;color:#BE185D;border:1.5px dashed #EC4899}
+.pcb.empty{background:#F1F5F9;color:#CBD5E1}
+.sym-card{background:#fff;border-radius:var(--radius);margin:0 16px 10px;padding:14px 16px;border:1px solid #E2E8F0}
+.sym-title{font-size:12px;font-weight:800;color:#64748B;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.sym-grid{display:flex;flex-wrap:wrap;gap:7px}
+.sym-pill{padding:7px 11px;border-radius:20px;font-size:12px;font-weight:700;border:1.5px solid #E2E8F0;background:#F8FAFC;color:#64748B;cursor:pointer;transition:all .18s}
+.sym-pill.on{background:linear-gradient(135deg,#FCE7F3,#FBD0E5);border-color:#EC4899;color:#9D174D}
+.flow-card{background:#fff;border-radius:var(--radius);margin:0 16px 10px;padding:14px 16px;border:1px solid #E2E8F0}
+.flow-pills{display:flex;gap:8px}
+.flow-pill{flex:1;padding:9px 4px;border-radius:10px;border:1.5px solid #E2E8F0;background:#F8FAFC;color:#64748B;font-size:11px;font-weight:700;cursor:pointer;text-align:center}
+.flow-pill.on{background:linear-gradient(135deg,#FCE7F3,#FBD0E5);border-color:#EC4899;color:#9D174D}
+.period-btns-row{display:flex;gap:8px;margin:0 16px 10px}
+.p-btn{flex:1;padding:13px;border-radius:12px;font-size:13px;font-weight:800;cursor:pointer;text-align:center;border:none;display:flex;align-items:center;justify-content:center;gap:6px}
+.p-start{background:linear-gradient(135deg,#BE185D,#EC4899);color:#fff;box-shadow:0 4px 14px rgba(190,24,93,.3)}
+.p-end{background:#FCE7F3;color:#BE185D;border:1.5px solid #FBCFE8}
+.period-hist-card{background:#fff;border-radius:var(--radius);margin:0 16px 10px;padding:14px 16px;border:1px solid #E2E8F0}
+.ph-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid #F8FAFC}
+.ph-row:last-child{border-bottom:none}
+.ph-date{font-size:13px;font-weight:700;color:#0F172A}
+.ph-detail{font-size:11px;color:#94A3B8;margin-top:1px}
+.ph-dur{font-size:13px;font-weight:800;color:#BE185D;background:#FCE7F3;padding:3px 10px;border-radius:20px}
+.devot-hero{background:linear-gradient(135deg,#78350F,#B45309,#D97706);padding:24px 18px 20px;position:relative;overflow:hidden}
+.devot-hero::before{content:"";position:absolute;top:-30px;right:-30px;width:130px;height:130px;border-radius:50%;background:rgba(245,200,66,.15);pointer-events:none}
+.verse-card{background:#fff;border-radius:var(--radius);margin:0 16px 10px;padding:18px;border:1px solid #E2E8F0}
+.verse-ref{font-size:11px;font-weight:800;color:#D97706;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.verse-text{font-size:15px;color:#0F172A;line-height:1.7;font-style:italic;font-weight:500;border-left:3px solid #F5C842;padding-left:14px}
+.verse-share-btn{margin-top:12px;width:100%;padding:11px;border-radius:10px;border:1.5px solid #D97706;background:#FEF3C7;color:#92400E;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.prayer-log-card{background:#fff;border-radius:var(--radius);margin:0 16px 10px;padding:14px 16px;border:1px solid #E2E8F0}
+.prayer-inp{width:100%;padding:11px 13px;font-size:13px;border:1.5px solid #E2E8F0;border-radius:10px;background:#F8FAFC;color:#0F172A;outline:none;font-family:inherit;margin-bottom:8px;font-weight:500;display:block}
+.prayer-save-btn{width:100%;padding:11px;background:linear-gradient(135deg,#B45309,#D97706);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer}
+.prayer-item{display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-bottom:1px solid #F1F5F9}
+.prayer-item:last-child{border-bottom:none}
+.prayer-item.answered .prayer-text{text-decoration:line-through;opacity:.5}
+.prayer-chk{width:24px;height:24px;min-width:24px;border-radius:50%;border:2px solid #E2E8F0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;flex-shrink:0;margin-top:1px}
+.prayer-chk.on{background:linear-gradient(135deg,#D97706,#F59E0B);border-color:transparent}
+.prayer-chk.on i{color:#fff;font-size:12px}
+.prayer-text{font-size:13px;color:#0F172A;font-weight:600;flex:1;line-height:1.4}
+.prayer-date{font-size:10px;color:#94A3B8;margin-top:2px;font-weight:600}
+.prayer-del{color:#E2E8F0;font-size:18px;cursor:pointer;padding:2px}
+.checklist-row{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid #F1F5F9;cursor:pointer}
+.checklist-row:last-child{border-bottom:none}
+.cl-chk{width:22px;height:22px;min-width:22px;border-radius:6px;border:2px solid #E2E8F0;display:flex;align-items:center;justify-content:center;transition:all .18s}
+.cl-chk.on{background:linear-gradient(135deg,#D97706,#F59E0B);border-color:transparent}
+.cl-chk.on i{color:#fff;font-size:11px}
+.cl-name{font-size:13px;font-weight:700;color:#0F172A;flex:1}
+.acct-hero{background:linear-gradient(135deg,#0C4A6E,#0E7490,#0891B2);padding:24px 18px 20px;position:relative;overflow:hidden}
+.acct-hero::before{content:"";position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.1);pointer-events:none}
+.score-ring-wrap{display:flex;justify-content:center;margin:12px 0 4px}
+.score-ring{position:relative;width:140px;height:140px;display:inline-flex;align-items:center;justify-content:center}
+.score-ring svg{width:140px;height:140px}
+.score-center{position:absolute;text-align:center}
+.score-num{font-size:34px;font-weight:800;color:#fff;letter-spacing:-1px}
+.score-lbl{font-size:10px;color:rgba(255,255,255,.6);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.score-breakdown{background:#fff;border-radius:var(--radius);margin:0 16px 10px;border:1px solid #E2E8F0;overflow:hidden}
+.sb-row{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid #F1F5F9}
+.sb-row:last-child{border-bottom:none}
+.sb-icon{width:32px;height:32px;min-width:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.sb-label{font-size:13px;font-weight:700;color:#0F172A}
+.sb-bar-wrap{flex:1;height:6px;background:#F1F5F9;border-radius:4px;overflow:hidden;margin:0 8px}
+.sb-bar{height:100%;border-radius:4px;transition:width .5s ease}
+.sb-pts{font-size:12px;font-weight:800;color:#64748B}
+.commit-card{background:#fff;border-radius:var(--radius);margin:0 16px 10px;padding:14px 16px;border:1px solid #E2E8F0}
+.commit-inp{width:100%;padding:11px 13px;font-size:13px;border:1.5px solid #E2E8F0;border-radius:10px;background:#F8FAFC;color:#0F172A;outline:none;font-family:inherit;margin-bottom:8px;font-weight:500;display:block}
+.commit-btn{width:100%;padding:11px;background:linear-gradient(135deg,#0E7490,#0891B2);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;margin-bottom:6px}
+.commit-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #F1F5F9}
+.commit-item:last-child{border-bottom:none}
+.commit-chk{width:22px;height:22px;min-width:22px;border-radius:6px;border:2px solid #E2E8F0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s}
+.commit-chk.on{background:linear-gradient(135deg,#0E7490,#0891B2);border-color:transparent}
+.commit-chk.on i{color:#fff;font-size:11px}
+.commit-text{font-size:13px;font-weight:700;color:#0F172A;flex:1;line-height:1.4}
+.commit-text.kept{text-decoration:line-through;opacity:.45}
+.partner-card{background:#fff;border-radius:var(--radius);margin:0 16px 10px;padding:14px 16px;border:1px solid #E2E8F0}
+.partner-inp{width:100%;padding:11px 13px;font-size:13px;border:1.5px solid #E2E8F0;border-radius:10px;background:#F8FAFC;color:#0F172A;outline:none;font-family:inherit;margin-bottom:8px;font-weight:500}
+.share-btn{flex:1;padding:11px;border-radius:10px;font-size:12px;font-weight:800;cursor:pointer;text-align:center;display:flex;align-items:center;justify-content:center;gap:6px;border:none}
+.notif-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer}
+.toggle-track{width:46px;height:26px;border-radius:13px;background:#E2E8F0;position:relative;transition:background .2s;flex-shrink:0}
+.toggle-track.on{background:linear-gradient(135deg,#0E7490,#0891B2)}
+.toggle-thumb{width:20px;height:20px;border-radius:50%;background:#fff;position:absolute;top:3px;left:3px;transition:transform .2s;box-shadow:0 2px 4px rgba(0,0,0,.15)}
+.toggle-track.on .toggle-thumb{transform:translateX(20px)}
+.bill-row{display:flex;align-items:center;gap:11px;padding:12px 16px;border-bottom:1px solid #F1F5F9;cursor:pointer;transition:background .15s}
+.bill-row:last-child{border-bottom:none}
+.b-icon{width:40px;height:40px;min-width:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.b-name{font-size:13px;font-weight:800;color:#0F172A}
+.b-due{font-size:11px;color:#94A3B8;font-weight:500;margin-top:1px}
+.b-amt{font-size:15px;font-weight:800;color:#0F172A}
+.b-badge{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:800;display:inline-block;margin-top:3px}
+.bp{background:#D1FAE5;color:#065F46}.bd{background:#FEE2E2;color:#991B1B}.bs{background:#FEF3C7;color:#92400E}
+.g-add-row{margin:0 16px 8px;display:flex;gap:8px}
+.g-add-row input{flex:1;padding:11px 13px;font-size:14px;border:1.5px solid #E2E8F0;border-radius:11px;background:#fff;color:#0F172A;outline:none;font-weight:600}
+.gadd-btn{padding:11px 18px;background:linear-gradient(135deg,#0E7490,#0891B2);color:#fff;border:none;border-radius:11px;font-size:13px;font-weight:800;cursor:pointer}
+.g-item{display:flex;align-items:center;gap:11px;padding:12px 16px;border-bottom:1px solid #F1F5F9;cursor:pointer}
+.g-item:last-child{border-bottom:none}
+.g-item.got{opacity:.38}
+.g-item.got .g-name{text-decoration:line-through}
+.g-chk{width:28px;height:28px;min-width:28px;border-radius:50%;border:2px solid #CBD5E1;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.g-chk.on{background:linear-gradient(135deg,#059669,#0D9488);border-color:transparent}
+.g-chk.on i{color:#fff;font-size:14px}
+.g-name{flex:1;font-size:14px;color:#0F172A;font-weight:700}
+.g-del{color:#CBD5E1;font-size:20px;padding:4px;cursor:pointer;line-height:1}
+.toast{position:fixed;top:14px;left:50%;transform:translateX(-50%);width:calc(100% - 28px);max-width:400px;background:#0F0C29;border-radius:14px;padding:13px 15px;display:flex;align-items:center;gap:11px;z-index:400;box-shadow:0 10px 36px rgba(15,12,41,.35)}
+.toast-ic{width:36px;height:36px;border-radius:50%;background:rgba(245,200,66,.2);display:flex;align-items:center;justify-content:center;min-width:36px}
+.toast-ic i{color:#F5C842;font-size:18px}
+.toast-t{font-size:13px;font-weight:800;color:#fff}
+.toast-s{font-size:11px;color:rgba(255,255,255,.55);margin-top:1px}
+.toast-x{color:rgba(255,255,255,.35);font-size:20px;cursor:pointer;padding:0 4px;flex-shrink:0;line-height:1;margin-left:auto}
+.page-hero-title{font-size:22px;font-weight:800;color:#fff;letter-spacing:-.3px}
+.page-hero-sub{font-size:12px;color:rgba(255,255,255,.6);font-weight:600;margin-top:2px}
+.page-hero-row{display:flex;justify-content:space-between;align-items:flex-start}
+.page-hero-btn{background:rgba(255,255,255,.22);color:#fff;border:1.5px solid rgba(255,255,255,.35);padding:7px 14px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer}
+.life-hero{background:linear-gradient(135deg,#1E1B4B,#312E81,#4338CA);padding:22px 18px 18px}
+.life-tabs{display:flex;gap:8px;margin:0 16px 10px}
+.life-tab{flex:1;padding:10px;border-radius:11px;font-size:13px;font-weight:700;cursor:pointer;text-align:center;border:1.5px solid #E2E8F0;background:#fff;color:#64748B;transition:all .15s}
+.life-tab.on{background:linear-gradient(135deg,#312E81,#4338CA);color:#fff;border-color:transparent}
+</style>
+</head>
+<body>
+
+<div id="toast" class="toast hidden"><div class="toast-ic"><i class="ti ti-sparkles"></i></div><div style="flex:1"><div class="toast-t" id="tt"></div><div class="toast-s" id="ts"></div></div><span class="toast-x" onclick="hideT()">x</span></div>
+
+<!-- HOME -->
+<div id="v-home">
+  <div class="hero">
+    <div class="hero-top"><div><div class="hero-greet" id="greet-sub">Good morning</div><div class="hero-name">My Life Hub</div><div class="hero-date" id="dstr"></div></div><div class="streak-badge"><i class="ti ti-flame"></i><span id="stn">0</span> day streak</div></div>
+    <div class="hero-prog"><div class="hero-prog-top"><span class="hero-prog-lbl">Today</span><span class="hero-prog-pct" id="pct">0%</span></div><div class="hero-prog-track"><div class="hero-prog-fill" id="pfill" style="width:0%"></div></div></div>
+    <div class="hero-stats"><div class="hs-item"><div class="hs-val" id="hs-done">0</div><div class="hs-lbl">Done</div></div><div class="hs-div"></div><div class="hs-item"><div class="hs-val" id="hs-left">0</div><div class="hs-lbl">Left</div></div><div class="hs-div"></div><div class="hs-item"><div class="hs-val" id="hs-score">0</div><div class="hs-lbl">Score</div></div><div class="hs-div"></div><div class="hs-item"><div class="hs-val" id="hs-water">0/8</div><div class="hs-lbl">Water</div></div></div>
+  </div>
+  <div class="mood-card"><div class="mood-top"><div class="mood-q">How are you feeling right now?</div><div class="mood-row" id="mrow"><div class="mood-btn" data-m="1" onclick="setMood(1)"><span class="moji">&#128546;</span><span>Low</span></div><div class="mood-btn" data-m="2" onclick="setMood(2)"><span class="moji">&#128533;</span><span>Meh</span></div><div class="mood-btn" data-m="3" onclick="setMood(3)"><span class="moji">&#128528;</span><span>Okay</span></div><div class="mood-btn" data-m="4" onclick="setMood(4)"><span class="moji">&#128522;</span><span>Good</span></div><div class="mood-btn" data-m="5" onclick="setMood(5)"><span class="moji">&#128514;</span><span>Great</span></div></div></div></div>
+  <div class="g2">
+    <div class="tile" style="background:linear-gradient(135deg,#EEF2FF,#E0E7FF)"><div class="tile-icon" style="background:rgba(79,70,229,.12)"><i class="ti ti-checks" style="color:#4F46E5"></i></div><div class="tile-val" style="color:#3730A3" id="h-done">0</div><div class="tile-lbl" style="color:#3730A3">Tasks done</div><div class="tile-sub" style="color:#4F46E5" id="h-left-sub">0 remaining</div></div>
+    <div class="tile" style="background:linear-gradient(135deg,#CCFBF1,#A7F3D0)"><div class="tile-icon" style="background:rgba(15,118,110,.12)"><i class="ti ti-droplet" style="color:#0F766E"></i></div><div class="tile-val" style="color:#065F46" id="h-water">0</div><div class="tile-lbl" style="color:#065F46">Water</div><div class="tile-sub" style="color:#059669" id="h-wsub">Goal: 8</div></div>
+    <div class="tile" style="background:linear-gradient(135deg,#EDE9FE,#DDD6FE)"><div class="tile-icon" style="background:rgba(124,58,237,.12)"><i class="ti ti-moon" style="color:#7C3AED"></i></div><div class="tile-val" style="color:#4C1D95" id="h-sleep">--</div><div class="tile-lbl" style="color:#4C1D95">Sleep hrs</div><div class="tile-sub" style="color:#7C3AED" id="h-ssub">Log in Health</div></div>
+    <div class="tile" style="background:linear-gradient(135deg,#FCE7F3,#FBD0E5)"><div class="tile-icon" style="background:rgba(190,24,93,.12)"><i class="ti ti-calendar-heart" style="color:#BE185D"></i></div><div class="tile-val" style="color:#831843" id="h-period">--</div><div class="tile-lbl" style="color:#831843">Cycle day</div><div class="tile-sub" style="color:#BE185D" id="h-period-sub">View cycle</div></div>
+  </div>
+  <div class="sec"><span class="sec-lbl">Water today</span><span class="sec-act" onclick="go('health')">Health tab</span></div>
+  <div class="grad-card" style="background:linear-gradient(135deg,#0F766E,#0D9488)"><div class="gc-title"><i class="ti ti-droplet"></i><span id="wcnt-h">0 of 8 glasses</span></div><div class="wdots" id="h-wdots"></div><div class="w-btns"><div class="wbtn" onclick="addW()"><i class="ti ti-plus"></i> Log glass</div><div class="wbtn wghost" onclick="resetW()">Reset</div></div></div>
+  <div class="sec"><span class="sec-lbl">Today's tasks</span><span class="sec-act" onclick="go('tasks')">All tasks</span></div>
+  <div class="card" id="dash-tasks"></div>
+  <div class="sec"><span class="sec-lbl">Today's verse</span><span class="sec-act" onclick="go('devotion')">Devotional</span></div>
+  <div class="card card-pad" id="dash-verse"></div>
+  <div class="sec"><span class="sec-lbl">Accountability score</span><span class="sec-act" onclick="go('accountability')">Details</span></div>
+  <div class="card card-pad" style="display:flex;align-items:center;gap:14px" id="dash-score"></div>
+  <div class="sec"><span class="sec-lbl">Bills due</span><span class="sec-act" onclick="go('life')">Manage</span></div>
+  <div class="card" id="dash-bills"></div>
+</div>
+
+<!-- TASKS -->
+<div id="v-tasks" class="hidden">
+  <div style="background:linear-gradient(135deg,#059669,#047857);padding:22px 18px 18px"><div class="page-hero-row"><div><div class="page-hero-title">Tasks</div><div class="page-hero-sub" id="task-sub">Loading...</div></div><button class="page-hero-btn" onclick="togAdd()">+ Add task</button></div></div>
+  <div id="add-form" class="add-form hidden" style="margin-top:12px">
+    <div style="font-size:15px;font-weight:800;color:#0F172A;margin-bottom:12px">New task</div>
+    <div class="fl"><label>Task name</label><input class="fi" type="text" id="an" placeholder="What do you need to do?"></div>
+    <div class="g2f"><div class="fl"><label>Category</label><select class="fi" id="ac"><option value="home">Home</option><option value="health">Health</option><option value="spiritual">Spiritual</option><option value="work">Work</option><option value="meal">Meal</option><option value="other">Other</option></select></div><div class="fl"><label>Time</label><input class="fi" type="text" id="atm" placeholder="e.g. 7 AM"></div></div>
+    <div class="g2f"><div class="fl"><label>Priority</label><select class="fi" id="apr"><option value="med">Medium</option><option value="high">High</option><option value="low">Low</option></select></div><div class="fl"><label>Repeat</label><select class="fi" id="arep"><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="none">Once</option></select></div></div>
+    <div class="btn-row"><button class="b-cancel" onclick="togAdd()">Cancel</button><button class="b-save" onclick="saveTask()">Save task</button></div>
+  </div>
+  <div class="fp-row" style="margin-top:10px"><div class="fp on" data-f="all" onclick="setF('all',this)">All</div><div class="fp" data-f="home" onclick="setF('home',this)">Home</div><div class="fp" data-f="health" onclick="setF('health',this)">Health</div><div class="fp" data-f="spiritual" onclick="setF('spiritual',this)">Spiritual</div><div class="fp" data-f="work" onclick="setF('work',this)">Work</div><div class="fp" data-f="meal" onclick="setF('meal',this)">Meal</div></div>
+  <div class="card" id="tlist" style="overflow:hidden"></div>
+</div>
+
+<!-- DEVOTIONAL -->
+<div id="v-devotion" class="hidden">
+  <div class="devot-hero"><div class="page-hero-title">Devotional</div><div class="page-hero-sub">Daily word - prayer - reflection</div></div>
+  <div class="sec"><span class="sec-lbl">Today's verse</span><span id="devot-date" style="font-size:11px;color:#94A3B8;font-weight:600"></span></div>
+  <div class="verse-card"><div class="verse-ref"><i class="ti ti-book" style="color:#D97706"></i><span id="verse-ref">Loading...</span></div><div class="verse-text" id="verse-text"></div><button class="verse-share-btn" onclick="shareVerse()"><i class="ti ti-share"></i> Share this verse</button></div>
+  <div class="sec"><span class="sec-lbl">Morning devotion checklist</span></div>
+  <div class="card" style="overflow:hidden">
+    <div class="checklist-row" onclick="togDevot(0)"><div class="cl-chk" id="dc0"><i class="ti ti-check"></i></div><div class="cl-name">Opened in prayer</div></div>
+    <div class="checklist-row" onclick="togDevot(1)"><div class="cl-chk" id="dc1"><i class="ti ti-check"></i></div><div class="cl-name">Read today's Bible passage</div></div>
+    <div class="checklist-row" onclick="togDevot(2)"><div class="cl-chk" id="dc2"><i class="ti ti-check"></i></div><div class="cl-name">Meditated on today's verse</div></div>
+    <div class="checklist-row" onclick="togDevot(3)"><div class="cl-chk" id="dc3"><i class="ti ti-check"></i></div><div class="cl-name">Wrote a reflection or gratitude</div></div>
+    <div class="checklist-row" onclick="togDevot(4)"><div class="cl-chk" id="dc4"><i class="ti ti-check"></i></div><div class="cl-name">Closed with thanksgiving</div></div>
+  </div>
+  <div class="sec"><span class="sec-lbl">Prayer requests</span></div>
+  <div class="prayer-log-card"><textarea class="prayer-inp" id="prayer-inp" rows="2" placeholder="Write a prayer request..."></textarea><button class="prayer-save-btn" onclick="savePrayer()">Add prayer request</button></div>
+  <div class="card" style="overflow:hidden" id="prayer-list"></div>
+  <div class="sec"><span class="sec-lbl">Devotional notes</span></div>
+  <div class="ref-card" style="background:#FFFBEB;border-color:#FDE68A"><div class="ref-q" style="color:#92400E">What is God speaking to you today?</div><textarea class="ref-area" id="devot-notes" style="border-color:#FDE68A;background:#fff" placeholder="Write your reflection..."></textarea><button onclick="saveDevotNotes()" style="width:100%;padding:11px;background:linear-gradient(135deg,#B45309,#D97706);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer">Save notes</button></div>
+</div>
+
+<!-- PERIOD -->
+<div id="v-period" class="hidden">
+  <div class="period-hero">
+    <div class="page-hero-title">Cycle tracker</div><div class="page-hero-sub" id="period-hero-sub">Your body, your calendar</div>
+    <div class="phase-strip" id="phase-strip"><div class="phase-seg" data-ph="Menstrual">Menstrual</div><div class="phase-seg" data-ph="Follicular">Follicular</div><div class="phase-seg" data-ph="Ovulation">Ovulation</div><div class="phase-seg" data-ph="Luteal">Luteal</div></div>
+    <div class="period-stats-row"><div class="pstat"><div class="pstat-val" id="ps-day">--</div><div class="pstat-lbl">Cycle day</div></div><div class="pstat-div"></div><div class="pstat"><div class="pstat-val" id="ps-next">--</div><div class="pstat-lbl">Days to next</div></div><div class="pstat-div"></div><div class="pstat"><div class="pstat-val" id="ps-dur">--</div><div class="pstat-lbl">Avg duration</div></div><div class="pstat-div"></div><div class="pstat"><div class="pstat-val" id="ps-len">28d</div><div class="pstat-lbl">Avg cycle</div></div></div>
+  </div>
+  <div class="period-btns-row" style="margin-top:12px"><button class="p-btn p-start" onclick="startPeriod()" id="p-start-btn">Start period</button><button class="p-btn p-end" onclick="endPeriod()" id="p-end-btn"><i class="ti ti-check"></i> End period</button></div>
+  <div class="sec"><span class="sec-lbl">This month</span><span id="period-month-lbl" style="font-size:11px;color:#94A3B8;font-weight:700"></span></div>
+  <div class="period-cal-card"><div style="font-size:11px;font-weight:700;color:#94A3B8;margin-bottom:10px">Tap Start/End to track. Pink = period days. Dashed = predicted.</div><div class="pcal" id="period-cal"></div></div>
+  <div class="flow-card"><div style="font-size:12px;font-weight:800;color:#64748B;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Flow intensity today</div><div class="flow-pills"><div class="flow-pill" data-fl="light" onclick="setFlow(this,'light')">Light</div><div class="flow-pill" data-fl="medium" onclick="setFlow(this,'medium')">Medium</div><div class="flow-pill" data-fl="heavy" onclick="setFlow(this,'heavy')">Heavy</div><div class="flow-pill" data-fl="none" onclick="setFlow(this,'none')">None</div></div></div>
+  <div class="sym-card"><div class="sym-title">Symptoms today</div><div class="sym-grid"><div class="sym-pill" data-s="cramps" onclick="togSym(this)">Cramps</div><div class="sym-pill" data-s="bloating" onclick="togSym(this)">Bloating</div><div class="sym-pill" data-s="headache" onclick="togSym(this)">Headache</div><div class="sym-pill" data-s="fatigue" onclick="togSym(this)">Fatigue</div><div class="sym-pill" data-s="mood" onclick="togSym(this)">Mood swings</div><div class="sym-pill" data-s="spotting" onclick="togSym(this)">Spotting</div><div class="sym-pill" data-s="backpain" onclick="togSym(this)">Back pain</div><div class="sym-pill" data-s="tender" onclick="togSym(this)">Breast tenderness</div><div class="sym-pill" data-s="acne" onclick="togSym(this)">Acne</div><div class="sym-pill" data-s="insomnia" onclick="togSym(this)">Insomnia</div></div></div>
+  <div class="sec"><span class="sec-lbl">Cycle history</span></div>
+  <div class="period-hist-card" id="period-hist"></div>
+</div>
+
+<!-- HEALTH -->
+<div id="v-health" class="hidden">
+  <div style="background:linear-gradient(135deg,#881337,#BE185D,#E11D48);padding:22px 18px 18px"><div class="page-hero-title">Health</div><div class="page-hero-sub">Sleep - water - supplements - movement</div></div>
+  <div class="g2" style="margin-top:10px">
+    <div class="tile" style="background:linear-gradient(135deg,#CCFBF1,#A7F3D0)"><div class="tile-icon" style="background:rgba(15,118,110,.12)"><i class="ti ti-droplet" style="color:#0F766E"></i></div><div class="tile-val" style="color:#065F46" id="h2-water">0</div><div class="tile-lbl" style="color:#065F46">Glasses</div><div class="tile-sub" style="color:#059669" id="h2-wsub">Goal: 8</div></div>
+    <div class="tile" style="background:linear-gradient(135deg,#EDE9FE,#DDD6FE)"><div class="tile-icon" style="background:rgba(124,58,237,.12)"><i class="ti ti-moon" style="color:#7C3AED"></i></div><div class="tile-val" style="color:#4C1D95" id="h2-sleep">--</div><div class="tile-lbl" style="color:#4C1D95">Last night</div><div class="tile-sub" style="color:#7C3AED" id="h2-ssub">7-9 hrs ideal</div></div>
+  </div>
+  <div class="grad-card" style="background:linear-gradient(135deg,#0F766E,#0D9488)"><div class="gc-title"><i class="ti ti-droplet"></i>Water tracker</div><div class="wdots" id="wdots"></div><div class="w-btns"><div class="wbtn" onclick="addW()"><i class="ti ti-plus"></i> Log a glass</div><div class="wbtn wghost" onclick="resetW()">Reset</div></div></div>
+  <div class="grad-card" style="background:linear-gradient(135deg,#4C1D95,#5B21B6)"><div class="gc-title"><i class="ti ti-moon"></i>Sleep tracker - 7 days</div><div class="sleep-inp-row"><input type="number" min="2" max="14" step="0.5" id="sinp" placeholder="Hours slept last night"><button class="slog-btn" style="color:#5B21B6" onclick="logS()">Log</button></div><div class="schart" id="schart"></div><div style="font-size:10px;color:rgba(255,255,255,.45);text-align:center;margin-top:7px;font-weight:700">Green = 7-9 hrs ideal - Red = too little - Amber = too much</div></div>
+  <div class="h-card"><div class="h-sec-title" style="color:#059669"><i class="ti ti-pill" style="color:#059669;font-size:17px"></i>Daily supplements - age 35</div><div id="supplist"></div></div>
+  <div class="h-card"><div class="h-sec-title" style="color:#7C3AED"><i class="ti ti-barbell" style="color:#7C3AED;font-size:17px"></i>Workout today</div><div class="wk-row"><div class="wk-pill" onclick="logWk(this,'Strength')"><i class="ti ti-barbell"></i> Strength</div><div class="wk-pill" onclick="logWk(this,'Cardio')"><i class="ti ti-run"></i> Cardio</div><div class="wk-pill" onclick="logWk(this,'Yoga')"><i class="ti ti-activity"></i> Yoga</div><div class="wk-pill" onclick="logWk(this,'Walk')"><i class="ti ti-walk"></i> Walk</div><div class="wk-pill" onclick="logWk(this,'Rest')"><i class="ti ti-zzz"></i> Rest</div></div></div>
+  <div class="h-card"><div class="h-sec-title" style="color:#0E7490"><i class="ti ti-stethoscope" style="color:#0E7490;font-size:17px"></i>Body reminders</div><div class="tip-row"><div class="tip-ic" style="background:#EFF6FF"><i class="ti ti-eye" style="color:#1D4ED8"></i></div><div><div class="tip-title">20-20-20 eye rule</div><div class="tip-sub">Every 20 min, look 20 ft away for 20 seconds</div></div></div><div class="tip-row"><div class="tip-ic" style="background:#F0FDF4"><i class="ti ti-run" style="color:#15803D"></i></div><div><div class="tip-title">Stretch every 90 min</div><div class="tip-sub">Stand up and move during long work sessions</div></div></div><div class="tip-row"><div class="tip-ic" style="background:#FFF1F2"><i class="ti ti-calendar-check" style="color:#BE123C"></i></div><div><div class="tip-title">Annual physical</div><div class="tip-sub">Book a checkup - critical at 35</div></div></div><div class="tip-row"><div class="tip-ic" style="background:#FFFBEB"><i class="ti ti-dental" style="color:#B45309"></i></div><div><div class="tip-title">Dental checkup</div><div class="tip-sub">Every 6 months without fail</div></div></div></div>
+</div>
+
+<!-- FOCUS -->
+<div id="v-focus" class="hidden">
+  <div class="focus-hero"><div class="page-hero-title">Focus timer</div><div class="page-hero-sub">Work in sessions, rest between</div></div>
+  <div class="timer-box" style="margin-top:10px"><div class="t-phase" id="tphase">Work session</div><div class="t-ring"><svg viewBox="0 0 160 160"><circle cx="80" cy="80" r="70" fill="none" stroke="#EDE9FE" stroke-width="8"/><circle cx="80" cy="80" r="70" fill="none" stroke="url(#tg)" stroke-width="8" stroke-linecap="round" stroke-dasharray="439.8" id="tarc" stroke-dashoffset="0" transform="rotate(-90 80 80)" style="transition:stroke-dashoffset .5s"/><defs><linearGradient id="tg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#7C3AED"/><stop offset="100%" style="stop-color:#4F46E5"/></linearGradient></defs></svg><div class="t-center"><div class="t-num" id="tnum">25:00</div><div class="t-sub" id="tsub">Ready</div></div></div><div class="sdots" id="sdots"></div><div class="sess-lbl" id="tsess">0 sessions today</div><div class="tbtns"><button class="t-btn" onclick="resetTmr()"><i class="ti ti-refresh"></i></button><button class="t-btn pri" id="playbtn" onclick="togTmr()"><i class="ti ti-player-play"></i> Start</button><button class="t-btn" onclick="skipPhase()"><i class="ti ti-player-skip-forward"></i></button></div></div>
+  <div class="sec"><span class="sec-lbl">Session length</span></div>
+  <div class="dp-row"><div class="dp on" data-d="25" onclick="setDur(25,this)">25 min</div><div class="dp" data-d="50" onclick="setDur(50,this)">50 min</div><div class="dp" data-d="15" onclick="setDur(15,this)">15 min</div></div>
+  <div class="sec"><span class="sec-lbl">Evening reflection</span></div>
+  <div class="ref-card"><div class="ref-q" id="refq"></div><textarea class="ref-area" id="refans" placeholder="Write your thoughts..."></textarea><button class="ref-save" onclick="saveRef()">Save reflection</button></div>
+</div>
+
+<!-- ACCOUNTABILITY -->
+<div id="v-accountability" class="hidden">
+  <div class="acct-hero"><div class="page-hero-title">Accountability</div><div class="page-hero-sub">Hold yourself to your best self</div><div class="score-ring-wrap"><div class="score-ring"><svg viewBox="0 0 140 140"><circle cx="70" cy="70" r="60" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="8"/><circle cx="70" cy="70" r="60" fill="none" stroke="url(#sg)" stroke-width="8" stroke-linecap="round" stroke-dasharray="376.9" id="score-arc" stroke-dashoffset="376.9" transform="rotate(-90 70 70)" style="transition:stroke-dashoffset .8s ease"/><defs><linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#F5C842"/><stop offset="100%" style="stop-color:#34D399"/></linearGradient></defs></svg><div class="score-center"><div class="score-num" id="score-big">0</div><div class="score-lbl">out of 100</div></div></div></div></div>
+  <div class="sec"><span class="sec-lbl">Score breakdown</span></div>
+  <div class="score-breakdown" id="score-breakdown"></div>
+  <div class="sec"><span class="sec-lbl">My commitments today</span></div>
+  <div class="commit-card"><textarea class="commit-inp" id="commit-inp" rows="2" placeholder="Write a commitment e.g. I will not skip my workout"></textarea><button class="commit-btn" onclick="addCommit()">+ Add commitment</button><div id="commit-list"></div></div>
+  <div class="sec"><span class="sec-lbl">Notifications</span></div>
+  <div class="card"><div class="notif-toggle" onclick="togNotif()"><div><div style="font-size:14px;font-weight:700;color:#0F172A">Daily reminders</div><div style="font-size:12px;color:#94A3B8;margin-top:2px">Get nudged to stay on track</div></div><div class="toggle-track" id="notif-track"><div class="toggle-thumb"></div></div></div><div style="border-top:1px solid #F1F5F9;padding:12px 16px"><div style="font-size:12px;color:#64748B;font-weight:600;margin-bottom:8px">Reminder times</div><div style="display:flex;gap:8px;flex-wrap:wrap"><div style="padding:6px 12px;border-radius:8px;background:#EEF2FF;color:#4F46E5;font-size:12px;font-weight:700">7:00 AM Morning</div><div style="padding:6px 12px;border-radius:8px;background:#EEF2FF;color:#4F46E5;font-size:12px;font-weight:700">12:00 PM Midday</div><div style="padding:6px 12px;border-radius:8px;background:#EEF2FF;color:#4F46E5;font-size:12px;font-weight:700">9:00 PM Evening</div></div></div></div>
+  <div class="sec"><span class="sec-lbl">Share progress</span></div>
+  <div class="partner-card"><div style="font-size:13px;font-weight:700;color:#0F172A;margin-bottom:8px">Accountability partner</div><input class="partner-inp" type="text" id="partner-name" placeholder="Partner name e.g. Mum, Sarah..." oninput="buildSharePreview()"><div style="display:flex;gap:8px;margin-top:4px"><button class="share-btn" style="background:linear-gradient(135deg,#059669,#047857);color:#fff;flex:1" onclick="shareProgress()"><i class="ti ti-share"></i> Share</button><button class="share-btn" style="background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;flex:1" onclick="shareWhatsApp()"><i class="ti ti-brand-whatsapp"></i> WhatsApp</button></div><div style="margin-top:10px;padding:10px 12px;background:#F0FDF4;border-radius:10px;border:1px solid #BBF7D0;font-size:12px;color:#0F172A;font-weight:600;line-height:1.7" id="share-preview"></div></div>
+  <div class="sec"><span class="sec-lbl">Weekly progress</span></div>
+  <div class="card card-pad"><div style="display:flex;gap:6px;justify-content:space-between" id="weekly-dots"></div><div style="font-size:11px;color:#94A3B8;text-align:center;margin-top:10px;font-weight:600">Gold = 80+ score day</div></div>
+</div>
+
+<!-- LIFE -->
+<div id="v-life" class="hidden">
+  <div class="life-hero"><div class="page-hero-title">Life</div><div class="page-hero-sub">Bills - grocery - home care</div></div>
+  <div class="life-tabs" style="margin-top:10px"><div class="life-tab on" onclick="togLifeTab('bills',this)">Bills</div><div class="life-tab" onclick="togLifeTab('grocery',this)">Grocery</div><div class="life-tab" onclick="togLifeTab('home',this)">Home care</div></div>
+  <div id="lt-bills">
+    <div class="g2"><div class="tile" style="background:linear-gradient(135deg,#D1FAE5,#A7F3D0)"><div class="tile-icon" style="background:rgba(5,150,105,.12)"><i class="ti ti-check" style="color:#059669"></i></div><div class="tile-val" style="color:#064E3B" id="b-paid-n">0</div><div class="tile-lbl" style="color:#065F46">Paid</div><div class="tile-sub" style="color:#059669">This month</div></div><div class="tile" style="background:linear-gradient(135deg,#FEE2E2,#FECACA)"><div class="tile-icon" style="background:rgba(239,68,68,.12)"><i class="ti ti-clock" style="color:#EF4444"></i></div><div class="tile-val" style="color:#7F1D1D" id="b-due-n">0</div><div class="tile-lbl" style="color:#991B1B">Unpaid</div><div class="tile-sub" style="color:#DC2626" id="b-rem-sub">$0 left</div></div></div>
+    <div class="sec"><span class="sec-lbl">All bills - tap to mark paid</span></div>
+    <div class="card" id="blist" style="overflow:hidden"></div>
+  </div>
+  <div id="lt-grocery" class="hidden"><div class="sec" style="margin-top:10px"><span class="sec-lbl">Shopping list</span><span class="sec-act" onclick="clearGot()">Clear done</span></div><div class="g-add-row"><input type="text" id="ginp" placeholder="Add an item..." onkeydown="if(event.key==='Enter')addG()"><button class="gadd-btn" onclick="addG()">Add</button></div><div class="card" id="glist" style="overflow:hidden;margin-top:4px"></div></div>
+  <div id="lt-home" class="hidden"><div class="sec" style="margin-top:10px"><span class="sec-lbl">Maintenance schedule</span></div><div class="h-card"><div class="tip-row"><div class="tip-ic" style="background:#F0FDF4"><i class="ti ti-vacuum-cleaner" style="color:#15803D"></i></div><div><div class="tip-title">Weekly</div><div class="tip-sub">Vacuum, mop, change sheets, scrub bathroom</div></div></div><div class="tip-row"><div class="tip-ic" style="background:#FFFBEB"><i class="ti ti-fridge" style="color:#B45309"></i></div><div><div class="tip-title">Bi-weekly</div><div class="tip-sub">Wipe appliances, clean fridge, mirrors</div></div></div><div class="tip-row"><div class="tip-ic" style="background:#FFF1F2"><i class="ti ti-tools" style="color:#BE123C"></i></div><div><div class="tip-title">Monthly</div><div class="tip-sub">Deep clean oven, declutter one room</div></div></div><div class="tip-row"><div class="tip-ic" style="background:#F5F3FF"><i class="ti ti-bell" style="color:#6D28D9"></i></div><div><div class="tip-title">Quarterly</div><div class="tip-sub">Smoke detectors, closet purge, wash windows</div></div></div></div></div>
+</div>
+
+<!-- NAV -->
+<nav class="bnav">
+  <div class="nt on" id="nt-home" onclick="go('home')" style="--nc:#4F46E5;--nb:#EEF2FF"><i class="ti ti-home"></i><span>Home</span></div>
+  <div class="nt" id="nt-tasks" onclick="go('tasks')" style="--nc:#059669;--nb:#D1FAE5"><i class="ti ti-checklist"></i><span>Tasks</span></div>
+  <div class="nt" id="nt-devotion" onclick="go('devotion')" style="--nc:#D97706;--nb:#FEF3C7"><i class="ti ti-bible"></i><span>Devotion</span></div>
+  <div class="nt" id="nt-period" onclick="go('period')" style="--nc:#BE185D;--nb:#FCE7F3"><i class="ti ti-heart"></i><span>Cycle</span></div>
+  <div class="nt" id="nt-health" onclick="go('health')" style="--nc:#7C3AED;--nb:#EDE9FE"><i class="ti ti-activity"></i><span>Health</span></div>
+  <div class="nt" id="nt-focus" onclick="go('focus')" style="--nc:#5B21B6;--nb:#EDE9FE"><i class="ti ti-clock"></i><span>Focus</span></div>
+  <div class="nt" id="nt-accountability" onclick="go('accountability')" style="--nc:#0E7490;--nb:#CFFAFE"><i class="ti ti-trophy"></i><span>Acct.</span></div>
+  <div class="nt" id="nt-life" onclick="go('life')" style="--nc:#312E81;--nb:#E0E7FF"><i class="ti ti-list-check"></i><span>Life</span></div>
+</nav>
+
+<script>
+const CAT={home:{c:'#4F46E5',bg:'#EEF2FF',i:'ti-home',l:'Home'},health:{c:'#BE185D',bg:'#FCE7F3',i:'ti-heart',l:'Health'},spiritual:{c:'#D97706',bg:'#FEF3C7',i:'ti-sun',l:'Spiritual'},work:{c:'#7C3AED',bg:'#EDE9FE',i:'ti-briefcase',l:'Work'},meal:{c:'#0F766E',bg:'#CCFBF1',i:'ti-bowl',l:'Meal'},other:{c:'#64748B',bg:'#F1F5F9',i:'ti-list',l:'Other'}};
+const VERSES=[
+  {ref:'Jeremiah 29:11',text:'For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, plans to give you hope and a future.'},
+  {ref:'Philippians 4:13',text:'I can do all this through him who gives me strength.'},
+  {ref:'Psalm 23:1',text:'The Lord is my shepherd, I lack nothing.'},
+  {ref:'Joshua 1:9',text:'Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.'},
+  {ref:'Proverbs 3:5-6',text:'Trust in the Lord with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight.'},
+  {ref:'Romans 8:28',text:'And we know that in all things God works for the good of those who love him, who have been called according to his purpose.'},
+  {ref:'Psalm 46:1',text:'God is our refuge and strength, an ever-present help in trouble.'},
+  {ref:'Isaiah 40:31',text:'But those who hope in the Lord will renew their strength. They will soar on wings like eagles; they will run and not grow weary, they will walk and not be faint.'},
+  {ref:'Matthew 6:33',text:'But seek first his kingdom and his righteousness, and all these things will be given to you as well.'},
+  {ref:'2 Timothy 1:7',text:'For the Spirit God gave us does not make us timid, but gives us power, love and self-discipline.'},
+  {ref:'Psalm 37:4',text:'Take delight in the Lord, and he will give you the desires of your heart.'},
+  {ref:'Romans 12:2',text:'Do not conform to the pattern of this world, but be transformed by the renewing of your mind.'},
+  {ref:'Psalm 121:1-2',text:'I lift up my eyes to the mountains — where does my help come from? My help comes from the Lord, the Maker of heaven and earth.'},
+  {ref:'Ephesians 3:20',text:'Now to him who is able to do immeasurably more than all we ask or imagine, according to his power that is at work within us.'},
+  {ref:'Lamentations 3:22-23',text:'Because of the Lord\'s great love we are not consumed, for his compassions never fail. They are new every morning; great is your faithfulness.'},
+  {ref:'Matthew 11:28',text:'Come to me, all you who are weary and burdened, and I will give you rest.'},
+  {ref:'Philippians 4:6-7',text:'Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God.'},
+  {ref:'Psalm 91:1-2',text:'Whoever dwells in the shelter of the Most High will rest in the shadow of the Almighty. I will say of the Lord, He is my refuge and my fortress, my God, in whom I trust.'},
+  {ref:'John 3:16',text:'For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.'},
+  {ref:'Isaiah 41:10',text:'So do not fear, for I am with you; do not be dismayed, for I am your God. I will strengthen you and help you; I will uphold you with my righteous right hand.'},
+  {ref:'Psalm 139:14',text:'I praise you because I am fearfully and wonderfully made; your works are wonderful, I know that full well.'},
+  {ref:'Galatians 5:22-23',text:'But the fruit of the Spirit is love, joy, peace, forbearance, kindness, goodness, faithfulness, gentleness and self-control.'},
+  {ref:'1 John 4:4',text:'You, dear children, are from God and have overcome them, because the one who is in you is greater than the one who is in the world.'},
+  {ref:'Psalm 34:8',text:'Taste and see that the Lord is good; blessed is the one who takes refuge in him.'},
+  {ref:'Romans 15:13',text:'May the God of hope fill you with all joy and peace as you trust in him, so that you may overflow with hope by the power of the Holy Spirit.'},
+  {ref:'Nehemiah 8:10',text:'Do not grieve, for the joy of the Lord is your strength.'},
+  {ref:'Psalm 27:1',text:'The Lord is my light and my salvation — whom shall I fear? The Lord is the stronghold of my life — of whom shall I be afraid?'},
+  {ref:'2 Corinthians 12:9',text:'But he said to me, My grace is sufficient for you, for my power is made perfect in weakness.'},
+  {ref:'Revelation 21:4',text:'He will wipe every tear from their eyes. There will be no more death or mourning or crying or pain, for the old order of things has passed away.'},
+  {ref:'John 14:27',text:'Peace I leave with you; my peace I give you. I do not give to you as the world gives. Do not let your hearts be troubled and do not be afraid.'},
+  {ref:'Deuteronomy 31:8',text:'The Lord himself goes before you and will be with you; he will never leave you nor forsake you. Do not be afraid; do not be discouraged.'}
+];
+const REFLECT=['What is God speaking to you today?','What area of your life needs more trust?','What are you most grateful for right now?','Where did you see God\'s hand today?','What habit do you want to build this week?','How can you show kindness to someone tomorrow?','What burden can you surrender to God tonight?'];
+
+function ls(k,d){try{const v=localStorage.getItem(k);return v!=null?JSON.parse(v):d;}catch{return d;}}
+function ss(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
+
+// STATE
+let tasks=ls('hub_t',[{id:1,name:'Pray',cat:'spiritual',time:'6:30 AM',priority:'high',repeat:'daily',done:false},{id:2,name:'Read your Bible',cat:'spiritual',time:'6:45 AM',priority:'high',repeat:'daily',done:false},{id:3,name:'Make breakfast',cat:'meal',time:'7:00 AM',priority:'med',repeat:'daily',done:false},{id:4,name:'Workout 30 min',cat:'health',time:'7:30 AM',priority:'high',repeat:'daily',done:false},{id:5,name:'Take supplements',cat:'health',time:'8:00 AM',priority:'med',repeat:'daily',done:false},{id:6,name:'Deep work block',cat:'work',time:'9:00 AM',priority:'high',repeat:'daily',done:false},{id:7,name:'Drink 8 glasses of water',cat:'health',time:'',priority:'med',repeat:'daily',done:false},{id:8,name:'Do the laundry',cat:'home',time:'10:00 AM',priority:'med',repeat:'weekly',done:false},{id:9,name:'Take the trash out',cat:'home',time:'8:00 AM',priority:'med',repeat:'weekly',done:false},{id:10,name:'Dinner time',cat:'meal',time:'6:30 PM',priority:'med',repeat:'daily',done:false},{id:11,name:'Tidy up the home',cat:'home',time:'8:00 PM',priority:'low',repeat:'daily',done:false},{id:12,name:'Wind down no screens',cat:'other',time:'9:30 PM',priority:'med',repeat:'daily',done:false}]);
+let water=ls('hub_w',0);
+let sleepLog=ls('hub_sl',[]);
+let supps=ls('hub_sp',[{n:'Vitamin D3',t:'Morning',done:false},{n:'Magnesium',t:'Evening',done:false},{n:'Omega-3',t:'Morning',done:false},{n:'Multivitamin',t:'Morning',done:false},{n:'Vitamin C',t:'Anytime',done:false}]);
+let mood=ls('hub_m',0),streak=ls('hub_str',0),sessions=ls('hub_ses',0);
+let grocery=ls('hub_g',['Eggs','Chicken breast','Brown rice','Spinach','Bananas','Greek yogurt','Oats','Olive oil','Garlic','Sweet potatoes','Almonds','Salmon'].map(n=>({n,got:false})));
+let bills=ls('hub_b',[{n:'Rent',a:1200,due:'1st',paid:false,ic:'ti-building'},{n:'Electricity',a:80,due:'15th',paid:false,ic:'ti-bolt'},{n:'Internet',a:60,due:'20th',paid:true,ic:'ti-wifi'},{n:'Phone bill',a:50,due:'22nd',paid:false,ic:'ti-phone'},{n:'Netflix',a:22,due:'28th',paid:true,ic:'ti-device-tv'},{n:'Gym membership',a:45,due:'5th',paid:false,ic:'ti-barbell'},{n:'Grocery budget',a:300,due:'Monthly',paid:false,ic:'ti-shopping-cart'},{n:'Car insurance',a:120,due:'10th',paid:false,ic:'ti-car'}]);
+let period=ls('hub_p',{cycles:[],active:null,symptoms:{},flow:{}});
+let prayers=ls('hub_pr',[]);
+let devotChecks=ls('hub_dc',[false,false,false,false,false]);
+let devotNotes=ls('hub_dn',{});
+let refs=ls('hub_r',{});
+let commits=ls('hub_co',[]);
+let notifOn=ls('hub_notif',false);
+let weeklyScores=ls('hub_ws',[]);
+let nid=ls('hub_nid',100),curF='all',addOpen=false;
+let tsecs=25*60,ttot=25*60,trun=false,tint=null,tbrk=false;
+
+function save(){ss('hub_t',tasks);ss('hub_w',water);ss('hub_sl',sleepLog);ss('hub_sp',supps);ss('hub_m',mood);ss('hub_str',streak);ss('hub_ses',sessions);ss('hub_g',grocery);ss('hub_b',bills);ss('hub_p',period);ss('hub_pr',prayers);ss('hub_dc',devotChecks);ss('hub_dn',devotNotes);ss('hub_r',refs);ss('hub_co',commits);ss('hub_notif',notifOn);ss('hub_ws',weeklyScores);ss('hub_nid',nid);}
+
+let toastT;
+function showT(t,s){document.getElementById('tt').textContent=t;document.getElementById('ts').textContent=s||'';document.getElementById('toast').classList.remove('hidden');clearTimeout(toastT);toastT=setTimeout(hideT,3500);}
+function hideT(){document.getElementById('toast').classList.add('hidden');}
+
+// NAVIGATION
+function go(v){
+  ['home','tasks','devotion','period','health','focus','accountability','life'].forEach(n=>{
+    document.getElementById('v-'+n).classList.toggle('hidden',n!==v);
+    const nt=document.getElementById('nt-'+n);if(nt)nt.classList.toggle('on',n===v);
+  });
+  if(v==='home')renderHome();
+  if(v==='tasks')renderTasksPage();
+  if(v==='devotion')renderDevotion();
+  if(v==='period')renderPeriod();
+  if(v==='health')renderHealth();
+  if(v==='focus'){renderTmr();renderRef();}
+  if(v==='accountability')renderAccountability();
+  if(v==='life'){renderBills();renderGrocery();}
+  window.scrollTo(0,0);
+}
+
+// SCORE
+function calcScore(){
+  const done=tasks.filter(t=>t.done).length,tot=tasks.length;
+  const taskPts=tot?Math.round(done/tot*30):0;
+  const waterPts=Math.round(Math.min(water/8,1)*15);
+  const lastSleep=sleepLog.length?sleepLog[sleepLog.length-1]:0;
+  const sleepPts=lastSleep>=7&&lastSleep<=9?15:lastSleep>=6?8:lastSleep>0?4:0;
+  const devotPts=devotChecks.filter(Boolean).length>=3?20:devotChecks.filter(Boolean).length*5;
+  const suppPts=supps.length&&supps.every(s=>s.done)?10:0;
+  const wkPts=document.querySelector&&document.querySelector('.wk-pill.on')?10:0;
+  return{total:Math.min(taskPts+waterPts+sleepPts+devotPts+suppPts+wkPts,100),taskPts,waterPts,sleepPts,devotPts,suppPts,wkPts};
+}
+
+// HOME
+function renderHome(){
+  const h=new Date().getHours();
+  document.getElementById('greet-sub').textContent=h<12?'Good morning':h<17?'Good afternoon':'Good evening';
+  document.getElementById('dstr').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  document.getElementById('stn').textContent=streak;
+  const done=tasks.filter(t=>t.done).length,tot=tasks.length,pct=tot?Math.round(done/tot*100):0;
+  document.getElementById('pfill').style.width=pct+'%';
+  document.getElementById('pct').textContent=pct+'%';
+  document.getElementById('hs-done').textContent=done;
+  document.getElementById('hs-left').textContent=tot-done;
+  const sc=calcScore();
+  document.getElementById('hs-score').textContent=sc.total;
+  document.getElementById('hs-water').textContent=water+'/8';
+  document.getElementById('h-done').textContent=done;
+  document.getElementById('h-left-sub').textContent=(tot-done)+' remaining';
+  document.getElementById('h-water').textContent=water;
+  document.getElementById('h-wsub').textContent=water>=8?'Goal reached!':'Goal: 8 glasses';
+  const ls2=sleepLog.length?sleepLog[sleepLog.length-1]:null;
+  document.getElementById('h-sleep').textContent=ls2?ls2.toFixed(1)+' h':'--';
+  document.getElementById('h-ssub').textContent=ls2?(ls2>=7&&ls2<=9?'Great':'Too little or much'):'Log in Health';
+  const lastStart=period.active?period.active.start:(period.cycles.length?period.cycles[0].start:null);
+  if(lastStart){const diff=Math.floor((new Date()-new Date(lastStart))/86400000)+1;document.getElementById('h-period').textContent=diff;document.getElementById('h-period-sub').textContent=period.active?'Period active':'Day of cycle';}
+  document.querySelectorAll('.mood-btn').forEach(m=>m.classList.toggle('on',parseInt(m.dataset.m)===mood));
+  document.getElementById('wcnt-h').textContent=water+' of 8 glasses';
+  document.getElementById('h-wdots').innerHTML=Array.from({length:8},(_,i)=>'<div class="wd'+(i<water?' on':'')+'" onclick="addW()"><i class="ti ti-droplet"></i></div>').join('');
+  const sorted=[...tasks.filter(t=>!t.done),...tasks.filter(t=>t.done)].slice(0,5);
+  document.getElementById('dash-tasks').innerHTML=sorted.length?sorted.map(t=>{const cat=CAT[t.cat]||CAT.other;return'<div class="dash-task'+(t.done?' done':'')+'" onclick="togTask('+t.id+')"><div class="sm-chk'+(t.done?' on':'')+'"><i class="ti ti-check"></i></div><div style="flex:1;min-width:0"><div class="dt-n">'+t.name+'</div><div style="display:flex;gap:5px;margin-top:2px"><span style="font-size:10px;padding:1px 6px;border-radius:6px;background:'+cat.bg+';color:'+cat.c+';font-weight:700">'+cat.l+'</span></div></div>'+(t.time?'<div class="dt-time">'+t.time+'</div>':'')+'</div>';}).join(''):'<div style="padding:18px;text-align:center;color:#94A3B8;font-size:13px;font-weight:600">All done! Great work today.</div>';
+  const v=VERSES[new Date().getDate()%VERSES.length];
+  document.getElementById('dash-verse').innerHTML='<div style="font-size:11px;font-weight:800;color:#D97706;margin-bottom:6px">'+v.ref+'</div><div style="font-size:13px;color:#0F172A;font-style:italic;line-height:1.6;border-left:3px solid #F5C842;padding-left:10px">'+v.text.substring(0,130)+(v.text.length>130?'...':'')+'</div>';
+  document.getElementById('dash-score').innerHTML='<div style="width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#F5C842,#34D399);display:flex;align-items:center;justify-content:center;flex-shrink:0"><span style="font-size:20px;font-weight:800;color:#fff">'+sc.total+'</span></div><div><div style="font-size:14px;font-weight:800;color:#0F172A">'+(sc.total>=80?'Excellent! 🏆':sc.total>=60?'Good progress 👍':sc.total>=40?'Keep going 💪':'Room to grow 🌱')+'</div><div style="font-size:12px;color:#94A3B8;margin-top:2px;font-weight:600">Accountability score today</div><div style="font-size:12px;color:#0E7490;font-weight:700;margin-top:4px;cursor:pointer" onclick="go(\'accountability\')">View breakdown</div></div>';
+  const unpaid=bills.filter(b=>!b.paid).slice(0,3);const dayN=new Date().getDate();
+  document.getElementById('dash-bills').innerHTML=unpaid.length?unpaid.map(b=>{const dN=parseInt(b.due)||0;const soon=dN&&Math.abs(dN-dayN)<=5;return'<div class="qrow" onclick="go(\'life\')"><div class="qrow-ic" style="background:'+(soon?'#FEF3C7':'#FEE2E2')+'"><i class="ti '+b.ic+'" style="color:'+(soon?'#D97706':'#DC2626')+'"></i></div><div><div class="qrow-name">'+b.n+'</div><div class="qrow-sub">Due '+b.due+'</div></div><div style="text-align:right"><div style="font-size:14px;font-weight:800;color:#0F172A">$'+b.a+'</div><div style="font-size:10px;padding:2px 7px;border-radius:12px;background:'+(soon?'#FEF3C7':'#FEE2E2')+';color:'+(soon?'#92400E':'#991B1B')+';font-weight:800;margin-top:2px">'+(soon?'Due soon':'Unpaid')+'</div></div></div>';}).join(''):'<div style="padding:16px;text-align:center;color:#059669;font-size:13px;font-weight:800">All bills paid this month!</div>';
+}
+function setMood(m){mood=m;save();document.querySelectorAll('.mood-btn').forEach(x=>x.classList.toggle('on',parseInt(x.dataset.m)===m));showT('Mood logged',['','Hang in there.','Tomorrow is a new day.','Steady going.','Great to hear!','You are thriving!'][m]);}
+function addW(){if(water<8)water++;save();renderHome();if(!document.getElementById('v-health').classList.contains('hidden'))renderHealth();if(water===8)showT('Hydration goal!','8 glasses today. Well done.');else showT('Water logged',water+' of 8 glasses.');}
+function resetW(){water=0;save();renderHome();if(!document.getElementById('v-health').classList.contains('hidden'))renderHealth();}
+function togTask(id){const t=tasks.find(x=>x.id===id);if(!t)return;t.done=!t.done;if(t.done&&tasks.every(x=>x.done)){streak++;save();showT('All tasks done!','Streak: '+streak+' days');}else if(t.done)showT(t.name,'Done! Keep going!');save();renderHome();if(!document.getElementById('v-tasks').classList.contains('hidden'))renderTasksPage();}
+
+// TASKS
+function renderTasksPage(){
+  const done=tasks.filter(t=>t.done).length,tot=tasks.length;
+  document.getElementById('task-sub').textContent=done+' of '+tot+' done today';
+  const filtered=curF==='all'?tasks:tasks.filter(t=>t.cat===curF);
+  const el=document.getElementById('tlist');
+  if(!filtered.length){el.innerHTML='<div style="padding:24px;text-align:center;color:#94A3B8;font-size:13px;font-weight:600">No tasks here yet.</div>';return;}
+  el.innerHTML=filtered.map(t=>{const cat=CAT[t.cat]||CAT.other;const pbg=t.priority==='high'?'#FEE2E2':t.priority==='low'?'#D1FAE5':'#FEF3C7';const ptx=t.priority==='high'?'#991B1B':t.priority==='low'?'#065F46':'#92400E';return'<div class="task-item'+(t.done?' done':'')+'" onclick="togTask('+t.id+')"><div class="big-chk'+(t.done?' on':'')+'"><i class="ti ti-check"></i></div><div style="flex:1;min-width:0"><div class="ti-name">'+t.name+'</div><div style="display:flex;flex-wrap:wrap;gap:4px;align-items:center"><span class="ti-chip" style="background:'+cat.bg+';color:'+cat.c+'"><i class="ti '+cat.i+'" style="font-size:10px"></i>'+cat.l+'</span><span class="ti-chip" style="background:'+pbg+';color:'+ptx+'">'+t.priority+'</span>'+(t.time?'<span class="ti-time"><i class="ti ti-clock" style="font-size:10px"></i>'+t.time+'</span>':'')+'</div></div></div>';}).join('');}
+function setF(f,el){curF=f;document.querySelectorAll('.fp').forEach(p=>p.classList.remove('on'));el.classList.add('on');renderTasksPage();}
+function togAdd(){addOpen=!addOpen;document.getElementById('add-form').classList.toggle('hidden',!addOpen);if(addOpen)setTimeout(()=>document.getElementById('an').focus(),80);}
+function saveTask(){const n=document.getElementById('an').value.trim();if(!n)return;tasks.push({id:nid++,name:n,cat:document.getElementById('ac').value,time:document.getElementById('atm').value.trim(),priority:document.getElementById('apr').value,repeat:document.getElementById('arep').value,done:false});document.getElementById('an').value='';document.getElementById('atm').value='';save();togAdd();renderTasksPage();showT('Task added!',n);}
+
+// DEVOTIONAL
+function renderDevotion(){
+  const today=new Date();
+  const v=VERSES[today.getDate()%VERSES.length];
+  document.getElementById('devot-date').textContent=today.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  document.getElementById('verse-ref').textContent=v.ref;
+  document.getElementById('verse-text').textContent=v.text;
+  for(let i=0;i<5;i++){const el=document.getElementById('dc'+i);el.classList.toggle('on',devotChecks[i]);el.innerHTML=devotChecks[i]?'<i class="ti ti-check"></i>':'';}
+  renderPrayers();
+  const todayStr=today.toDateString();
+  document.getElementById('devot-notes').value=devotNotes[todayStr]||'';
+}
+function togDevot(i){devotChecks[i]=!devotChecks[i];save();const el=document.getElementById('dc'+i);el.classList.toggle('on',devotChecks[i]);el.innerHTML=devotChecks[i]?'<i class="ti ti-check"></i>':'';if(devotChecks[i])showT('Step completed','Keep going in your devotion.');}
+function savePrayer(){const t=document.getElementById('prayer-inp').value.trim();if(!t)return;prayers.unshift({id:Date.now(),text:t,date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}),answered:false});document.getElementById('prayer-inp').value='';save();renderPrayers();showT('Prayer added','God hears every prayer.');}
+function renderPrayers(){const el=document.getElementById('prayer-list');el.innerHTML=prayers.length?prayers.map((p,i)=>'<div class="prayer-item'+(p.answered?' answered':'')+'"><div class="prayer-chk'+(p.answered?' on':'')+'" onclick="togPrayer('+i+')">'+(p.answered?'<i class="ti ti-check"></i>':'')+'</div><div><div class="prayer-text">'+p.text+'</div><div class="prayer-date">'+p.date+(p.answered?' - Answered':'')+'</div></div><span class="prayer-del" onclick="delPrayer('+i+')">x</span></div>').join(''):'<div style="padding:14px 16px;color:#94A3B8;font-size:13px;font-weight:600">No prayer requests yet.</div>';}
+function togPrayer(i){prayers[i].answered=!prayers[i].answered;save();renderPrayers();if(prayers[i].answered)showT('Prayer answered!','Praise God!');}
+function delPrayer(i){prayers.splice(i,1);save();renderPrayers();}
+function saveDevotNotes(){const todayStr=new Date().toDateString();devotNotes[todayStr]=document.getElementById('devot-notes').value.trim();save();showT('Notes saved','Keep seeking His word.');}
+function shareVerse(){const v=VERSES[new Date().getDate()%VERSES.length];const text=v.ref+'\n\n'+v.text+'\n\nShared from My Life Hub';if(navigator.share){navigator.share({title:'Daily Verse',text}).catch(()=>{});}else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>showT('Verse copied!','Paste and share anywhere.'));}}
+
+// PERIOD
+function renderPeriod(){
+  const today=new Date(),todayStr=today.toISOString().split('T')[0];
+  document.getElementById('period-month-lbl').textContent=today.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  const avgCycle=period.cycles.length>=2?Math.round(period.cycles.slice(0,-1).reduce((a,c,i)=>{const diff=Math.abs((new Date(period.cycles[i].start)-new Date(period.cycles[i+1].start))/86400000);return a+diff;},0)/(period.cycles.length-1)):28;
+  const finishedCycles=period.cycles.filter(c=>c.end);
+  const avgDur=finishedCycles.length?Math.round(finishedCycles.reduce((a,c)=>a+Math.floor((new Date(c.end)-new Date(c.start))/86400000)+1,0)/finishedCycles.length):5;
+  const lastStart=period.active?period.active.start:(period.cycles.length?period.cycles[0].start:null);
+  let cycleDay=0,daysToNext='--';
+  if(lastStart){cycleDay=Math.floor((today-new Date(lastStart))/86400000)+1;daysToNext=Math.max(0,avgCycle-cycleDay+1);}
+  document.getElementById('ps-day').textContent=cycleDay||'--';
+  document.getElementById('ps-next').textContent=daysToNext;
+  document.getElementById('ps-dur').textContent=avgDur+'d';
+  document.getElementById('ps-len').textContent=avgCycle+'d';
+  const phase=cycleDay<=avgDur?'Menstrual':cycleDay<=13?'Follicular':cycleDay<=16?'Ovulation':'Luteal';
+  document.getElementById('period-hero-sub').textContent=period.active?'Period is active - take care of yourself':phase+' phase - Day '+cycleDay;
+  document.querySelectorAll('.phase-seg').forEach(s=>s.classList.toggle('active',s.dataset.ph===phase));
+  document.getElementById('p-start-btn').style.opacity=period.active?'.4':'1';
+  document.getElementById('p-end-btn').style.opacity=period.active?'1':'.4';
+  const year=today.getFullYear(),month=today.getMonth();
+  const daysInMonth=new Date(year,month+1,0).getDate();
+  const periodDays=new Set();
+  [...period.cycles,(period.active||null)].filter(Boolean).forEach(c=>{if(!c.start)return;const s=new Date(c.start),e=c.end?new Date(c.end):new Date(c.start);for(let d=new Date(s);d<=e;d.setDate(d.getDate()+1)){if(d.getFullYear()===year&&d.getMonth()===month)periodDays.add(d.getDate());}});
+  const predictedDays=new Set();
+  if(lastStart&&typeof daysToNext==='number'&&daysToNext<=14){const pred=new Date(today);pred.setDate(today.getDate()+daysToNext);for(let i=0;i<5;i++){const pd=new Date(pred);pd.setDate(pred.getDate()+i);if(pd.getMonth()===month)predictedDays.add(pd.getDate());}}
+  document.getElementById('period-cal').innerHTML=Array.from({length:daysInMonth},(_,i)=>{const d=i+1,isT=d===today.getDate(),isPer=periodDays.has(d),isPred=predictedDays.has(d);const cls=isPer?'period':isT?'today':isPred?'predicted':'empty';return'<div class="pcb '+cls+'">'+d+'</div>';}).join('');
+  const todayFlow=period.flow[todayStr];
+  document.querySelectorAll('.flow-pill').forEach(p=>p.classList.toggle('on',p.dataset.fl===todayFlow));
+  const todaySyms=period.symptoms[todayStr]||[];
+  document.querySelectorAll('.sym-pill').forEach(p=>p.classList.toggle('on',todaySyms.includes(p.dataset.s)));
+  const hist=document.getElementById('period-hist');
+  if(!period.cycles.length){hist.innerHTML='<div style="padding:14px;color:#94A3B8;font-size:13px;font-weight:600">No cycles logged yet. Tap Start period above.</div>';return;}
+  hist.innerHTML=period.cycles.slice(0,5).map((c,i)=>{const dur=c.end?Math.floor((new Date(c.end)-new Date(c.start))/86400000)+1+'d':'Active';const cyc=i<period.cycles.length-1?Math.round(Math.abs((new Date(c.start)-new Date(period.cycles[i+1].start))/86400000))+'d':'--';return'<div class="ph-row"><div><div class="ph-date">'+new Date(c.start).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+'</div><div class="ph-detail">Cycle length: '+cyc+'</div></div><div class="ph-dur">'+dur+'</div></div>';}).join('');}
+function startPeriod(){if(period.active){showT('Period already active','Tap End period when done.');return;}period.active={start:new Date().toISOString().split('T')[0],end:null};save();renderPeriod();showT('Period started','Take care of yourself today.');}
+function endPeriod(){if(!period.active){showT('No active period','Tap Start period first.');return;}period.active.end=new Date().toISOString().split('T')[0];period.cycles.unshift({...period.active});if(period.cycles.length>12)period.cycles.pop();period.active=null;save();renderPeriod();showT('Period ended','Logged and saved. Stay hydrated!');}
+function setFlow(el,fl){const todayStr=new Date().toISOString().split('T')[0];period.flow[todayStr]=fl;save();document.querySelectorAll('.flow-pill').forEach(p=>p.classList.toggle('on',p.dataset.fl===fl));showT('Flow logged',fl.charAt(0).toUpperCase()+fl.slice(1));}
+function togSym(el){const todayStr=new Date().toISOString().split('T')[0];if(!period.symptoms[todayStr])period.symptoms[todayStr]=[];const s=el.dataset.s;const idx=period.symptoms[todayStr].indexOf(s);if(idx>=0)period.symptoms[todayStr].splice(idx,1);else period.symptoms[todayStr].push(s);el.classList.toggle('on',period.symptoms[todayStr].includes(s));save();}
+
+// HEALTH
+function renderHealth(){
+  document.getElementById('h2-water').textContent=water;
+  document.getElementById('h2-wsub').textContent=water>=8?'Goal reached!':'Goal: 8';
+  const ls2=sleepLog.length?sleepLog[sleepLog.length-1]:null;
+  document.getElementById('h2-sleep').textContent=ls2?ls2.toFixed(1)+' h':'--';
+  document.getElementById('h2-ssub').textContent=ls2?(ls2>=7&&ls2<=9?'Great range':'Check your sleep'):'7-9 hrs ideal';
+  document.getElementById('wdots').innerHTML=Array.from({length:8},(_,i)=>'<div class="wd'+(i<water?' on':'')+'" onclick="addW()"><i class="ti ti-droplet"></i></div>').join('');
+  renderSChart();
+  document.getElementById('supplist').innerHTML=supps.map((s,i)=>'<div class="supp-row"><div class="sq'+(s.done?' on':'')+'" onclick="togSupp('+i+')">'+(s.done?'<i class="ti ti-check"></i>':'')+'</div><div class="sn">'+s.n+'</div><div class="st2">'+s.t+'</div></div>').join('');}
+function logS(){const v=parseFloat(document.getElementById('sinp').value);if(isNaN(v)||v<2||v>14){showT('Check your entry','Enter hours between 2 and 14.');return;}sleepLog.push(v);if(sleepLog.length>7)sleepLog.shift();document.getElementById('sinp').value='';save();renderHealth();renderHome();showT('Sleep logged',v.toFixed(1)+' hrs - '+(v>=7&&v<=9?'Perfect range!':v<6?'Aim for 7-9 hrs.':'A bit long.'));}
+function renderSChart(){const days=['Mo','Tu','We','Th','Fr','Sa','Su'];const el=document.getElementById('schart');const data=Array(7).fill(0).map((_,i)=>sleepLog[i]||0);el.innerHTML=data.map((v,i)=>{const pct=v?Math.min(Math.round(v/10*100),100):0;const col=v===0?'rgba(255,255,255,.18)':v>=7&&v<=9?'#34D399':v<6?'#F87171':'#FBBF24';return'<div class="sbc"><div class="sbv">'+(v?v.toFixed(1):'')+'</div><div style="flex:1;width:100%;display:flex;align-items:flex-end"><div class="sbi" style="height:'+pct+'%;min-height:'+(v?4:2)+'px;background:'+col+'"></div></div><div class="sbd">'+days[i]+'</div></div>';}).join('');}
+function togSupp(i){supps[i].done=!supps[i].done;save();renderHealth();}
+function logWk(el,type){document.querySelectorAll('.wk-pill').forEach(p=>p.classList.remove('on'));el.classList.add('on');showT('Workout logged!',type+' - great work!');}
+
+// FOCUS TIMER
+function renderTmr(){const m=Math.floor(tsecs/60),s=tsecs%60;document.getElementById('tnum').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');const pct=(ttot-tsecs)/ttot;document.getElementById('tarc').style.strokeDashoffset=String(Math.round(439.8*pct));document.getElementById('tphase').textContent=tbrk?'Break time':'Work session';document.getElementById('tsub').textContent=trun?(tbrk?'Resting...':'Deep focus...'):'Ready';const n=Math.max(sessions,4);document.getElementById('sdots').innerHTML=Array.from({length:n},(_,i)=>'<div class="sdot'+(i<sessions?'':' empty')+'"></div>').join('');document.getElementById('tsess').textContent=sessions+' session'+(sessions!==1?'s':'')+' today';}
+function togTmr(){if(trun){clearInterval(tint);trun=false;document.getElementById('playbtn').innerHTML='<i class="ti ti-player-play"></i> Resume';}else{trun=true;document.getElementById('playbtn').innerHTML='<i class="ti ti-player-pause"></i> Pause';tint=setInterval(()=>{tsecs--;renderTmr();if(tsecs<=0){clearInterval(tint);trun=false;if(!tbrk){sessions++;save();showT('Session done!','Break time. Sessions: '+sessions);tbrk=true;tsecs=ttot=5*60;}else{tbrk=false;tsecs=ttot=25*60;showT('Break over!','Ready for the next session?');}document.getElementById('playbtn').innerHTML='<i class="ti ti-player-play"></i> Start';renderTmr();}},1000);}renderTmr();}
+function resetTmr(){clearInterval(tint);trun=false;tbrk=false;tsecs=ttot;document.getElementById('playbtn').innerHTML='<i class="ti ti-player-play"></i> Start';renderTmr();}
+function skipPhase(){clearInterval(tint);trun=false;tbrk=!tbrk;tsecs=ttot=tbrk?5*60:25*60;document.getElementById('playbtn').innerHTML='<i class="ti ti-player-play"></i> Start';renderTmr();}
+function setDur(d,el){clearInterval(tint);trun=false;tbrk=false;tsecs=ttot=d*60;document.querySelectorAll('.dp').forEach(p=>p.classList.remove('on'));el.classList.add('on');document.getElementById('playbtn').innerHTML='<i class="ti ti-player-play"></i> Start';renderTmr();}
+function renderRef(){const today=new Date().toDateString(),q=REFLECT[new Date().getDay()%REFLECT.length];document.getElementById('refq').textContent=q;document.getElementById('refans').value=refs[today]||'';}
+function saveRef(){const today=new Date().toDateString();refs[today]=document.getElementById('refans').value.trim();save();showT('Reflection saved','Keep growing.');}
+
+// ACCOUNTABILITY
+function renderAccountability(){
+  const sc=calcScore();
+  document.getElementById('score-big').textContent=sc.total;
+  document.getElementById('score-arc').style.strokeDashoffset=String(Math.round(376.9*(1-sc.total/100)));
+  const rows=[
+    {lbl:'Tasks completed',pts:sc.taskPts,max:30,col:'#4F46E5',bg:'#EEF2FF',ic:'ti-checks'},
+    {lbl:'Water intake',pts:sc.waterPts,max:15,col:'#0F766E',bg:'#CCFBF1',ic:'ti-droplet'},
+    {lbl:'Sleep quality',pts:sc.sleepPts,max:15,col:'#7C3AED',bg:'#EDE9FE',ic:'ti-moon'},
+    {lbl:'Devotional done',pts:sc.devotPts,max:20,col:'#D97706',bg:'#FEF3C7',ic:'ti-bible'},
+    {lbl:'Supplements taken',pts:sc.suppPts,max:10,col:'#059669',bg:'#D1FAE5',ic:'ti-pill'},
+    {lbl:'Workout logged',pts:sc.wkPts,max:10,col:'#BE185D',bg:'#FCE7F3',ic:'ti-barbell'},
+  ];
+  document.getElementById('score-breakdown').innerHTML=rows.map(r=>'<div class="sb-row"><div class="sb-icon" style="background:'+r.bg+'"><i class="ti '+r.ic+'" style="color:'+r.col+'"></i></div><div style="flex:1;min-width:0"><div class="sb-label">'+r.lbl+'</div><div class="sb-bar-wrap"><div class="sb-bar" style="width:'+Math.round(r.pts/r.max*100)+'%;background:'+r.col+'"></div></div></div><div class="sb-pts" style="color:'+r.col+'">'+r.pts+'/'+r.max+'</div></div>').join('');
+  renderCommits();
+  document.getElementById('notif-track').classList.toggle('on',notifOn);
+  const days=['S','M','T','W','T','F','S'],todayIdx=new Date().getDay();
+  document.getElementById('weekly-dots').innerHTML=days.map((d,i)=>{const isT=i===todayIdx,past=i<todayIdx,score=past?weeklyScores[i]||0:0,gold=score>=80;return'<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:36px;height:36px;border-radius:50%;background:'+(isT?'linear-gradient(135deg,#4F46E5,#7C3AED)':gold?'linear-gradient(135deg,#F5C842,#E8A020)':past?'#E2E8F0':'transparent')+';border:2px solid '+(isT||gold?'transparent':'#E2E8F0')+';display:flex;align-items:center;justify-content:center"><span style="font-size:11px;font-weight:800;color:'+(isT||gold?'#fff':'#94A3B8')+'">'+(isT?sc.total:past&&score?score:'')+'</span></div><span style="font-size:10px;color:'+(isT?'#4F46E5':'#94A3B8')+';font-weight:700">'+d+'</span></div>';}).join('');
+  buildSharePreview();
+}
+function buildSharePreview(){const sc=calcScore();const partner=(document.getElementById('partner-name')||{}).value||'my accountability partner';const done=tasks.filter(t=>t.done).length;const lines=['Hey '+(partner!=='my accountability partner'?partner:'there')+'! My daily update:','','Tasks: '+done+'/'+tasks.length+' done','Water: '+water+'/8 glasses','Devotional: '+devotChecks.filter(Boolean).length+'/5 steps','Score: '+sc.total+'/100','',sc.total>=80?'Crushing it today!':sc.total>=60?'Making progress!':'Still pushing forward!'];const el=document.getElementById('share-preview');if(el)el.innerHTML=lines.join('\n').replace(/\n/g,'<br>');}
+function togNotif(){if(!notifOn&&'Notification' in window){Notification.requestPermission().then(perm=>{notifOn=perm==='granted';save();document.getElementById('notif-track').classList.toggle('on',notifOn);if(notifOn){showT('Notifications on!','You will get daily reminders.');try{new Notification('My Life Hub',{body:'Daily reminders are now active. Stay on track!'});}catch(e){}}else showT('Permission needed','Enable notifications in your browser settings.')});}else{notifOn=!notifOn;save();document.getElementById('notif-track').classList.toggle('on',notifOn);showT(notifOn?'Notifications on!':'Notifications off',notifOn?'You will be reminded daily.':'Toggled off.');}}
+function addCommit(){const t=(document.getElementById('commit-inp')||{}).value.trim();if(!t)return;commits.unshift({id:Date.now(),text:t,kept:false,date:new Date().toDateString()});document.getElementById('commit-inp').value='';save();renderCommits();showT('Commitment added!','Hold yourself to it!');}
+function renderCommits(){const today=new Date().toDateString(),todayC=commits.filter(c=>c.date===today);const el=document.getElementById('commit-list');if(!el)return;el.innerHTML=todayC.length?todayC.map(c=>{const gi=commits.findIndex(x=>x.id===c.id);return'<div class="commit-item"><div class="commit-chk'+(c.kept?' on':'')+'" onclick="togCommit('+gi+')">'+(c.kept?'<i class="ti ti-check"></i>':'')+'</div><div class="commit-text'+(c.kept?' kept':'')+'">'+c.text+'</div><span style="color:#CBD5E1;font-size:18px;cursor:pointer;padding:2px" onclick="delCommit('+gi+')">x</span></div>';}).join(''):'<div style="color:#94A3B8;font-size:13px;font-weight:600;padding:4px 0">No commitments yet today. What will you commit to?</div>';}
+function togCommit(i){commits[i].kept=!commits[i].kept;save();renderCommits();if(commits[i].kept)showT('Commitment kept!','That is accountability in action.');}
+function delCommit(i){commits.splice(i,1);save();renderCommits();}
+function shareProgress(){const sc=calcScore();const done=tasks.filter(t=>t.done).length;const partner=(document.getElementById('partner-name')||{}).value||'friend';const text='Hey '+partner+'! My life hub daily update:\n\nTasks: '+done+'/'+tasks.length+' done\nWater: '+water+'/8 glasses\nDevotion: '+devotChecks.filter(Boolean).length+'/5 steps\nSleep: '+(sleepLog.length?sleepLog[sleepLog.length-1].toFixed(1)+' hrs':'Not logged')+'\nScore: '+sc.total+'/100\n\n'+(sc.total>=80?'Crushing it!':sc.total>=60?'Making good progress':'Still pushing');if(navigator.share){navigator.share({title:'My Daily Progress',text}).catch(()=>{});}else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>showT('Copied!','Paste and send to your partner.'));}}
+function shareWhatsApp(){const sc=calcScore();const done=tasks.filter(t=>t.done).length;const partner=(document.getElementById('partner-name')||{}).value||'friend';const text=encodeURIComponent('Hey '+partner+'! My daily update\nTasks: '+done+'/'+tasks.length+'\nWater: '+water+'/8\nDevotion: '+devotChecks.filter(Boolean).length+'/5\nScore: '+sc.total+'/100\n'+(sc.total>=80?'Crushing it!':'Keep pushing!'));window.open('https://wa.me/?text='+text,'_blank');}
+
+// BILLS & GROCERY
+function renderBills(){
+  const day=new Date().getDate();
+  document.getElementById('b-paid-n').textContent=bills.filter(b=>b.paid).length;
+  document.getElementById('b-due-n').textContent=bills.filter(b=>!b.paid).length;
+  document.getElementById('b-rem-sub').textContent='$'+bills.filter(b=>!b.paid).reduce((a,b)=>a+b.a,0).toLocaleString()+' left';
+  document.getElementById('blist').innerHTML=bills.map((b,i)=>{const dN=parseInt(b.due)||0,soon=!b.paid&&dN&&Math.abs(dN-day)<=5,cls=b.paid?'bp':soon?'bs':'bd',lbl=b.paid?'Paid':soon?'Due soon':'Unpaid',ibg=b.paid?'linear-gradient(135deg,#D1FAE5,#A7F3D0)':soon?'linear-gradient(135deg,#FEF3C7,#FDE68A)':'linear-gradient(135deg,#FEE2E2,#FECACA)',itx=b.paid?'#059669':soon?'#D97706':'#DC2626';return'<div class="bill-row" onclick="togBill('+i+')"><div class="b-icon" style="background:'+ibg+'"><i class="ti '+b.ic+'" style="color:'+itx+'"></i></div><div style="flex:1;min-width:0"><div class="b-name">'+b.n+'</div><div class="b-due">Due: '+b.due+'</div></div><div style="text-align:right;flex-shrink:0"><div class="b-amt">$'+b.a+'</div><div class="b-badge '+cls+'">'+lbl+'</div></div></div>';}).join('');}
+function togBill(i){bills[i].paid=!bills[i].paid;save();renderBills();showT(bills[i].n,bills[i].paid?'Marked as paid':'Marked as unpaid');}
+function renderGrocery(){document.getElementById('glist').innerHTML=grocery.map((g,i)=>'<div class="g-item'+(g.got?' got':'')+'" onclick="togG('+i+')"><div class="g-chk'+(g.got?' on':'')+'"><i class="ti ti-check"></i></div><div class="g-name">'+g.n+'</div><span class="g-del" onclick="event.stopPropagation();delG('+i+')">x</span></div>').join('')||'<div style="padding:18px;text-align:center;color:#94A3B8;font-size:13px">Add items above.</div>';}
+function togG(i){grocery[i].got=!grocery[i].got;save();renderGrocery();}
+function delG(i){grocery.splice(i,1);save();renderGrocery();}
+function addG(){const v=(document.getElementById('ginp')||{}).value.trim();if(!v)return;grocery.push({n:v,got:false});document.getElementById('ginp').value='';save();renderGrocery();}
+function clearGot(){grocery=grocery.filter(g=>!g.got);save();renderGrocery();showT('Cleared','Done items removed.');}
+let lifeTab='bills';
+function togLifeTab(t,el){lifeTab=t;document.querySelectorAll('.life-tab').forEach(x=>x.classList.remove('on'));el.classList.add('on');['bills','grocery','home'].forEach(n=>document.getElementById('lt-'+n).classList.toggle('hidden',n!==t));if(t==='bills')renderBills();if(t==='grocery')renderGrocery();}
+
+// INIT
+renderHome();
+renderTmr();
+setTimeout(()=>{const nx=tasks.find(t=>!t.done&&t.time);if(nx)showT('Coming up',nx.name+(nx.time?' - '+nx.time:''));},1500);
+const todayIdx=new Date().getDay();weeklyScores[todayIdx]=calcScore().total;ss('hub_ws',weeklyScores);
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});}
+</script>
+</body>
+</html>
